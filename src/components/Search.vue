@@ -79,6 +79,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .container {
   display: flex;
   > * { // container의 모든 자식 요소들
@@ -103,6 +104,24 @@ export default {
     font-weight: 700;
     // 버튼 가로 너비 줄어드는 것을 방지
     flex-shrink: 0;
+  }
+
+  @include media-breakpoint-down(lg)  {
+    display: block;
+    input {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+    .selects {
+      margin-right: 0;
+      margin-bottom: 10px;
+      select {
+        width: 100%;
+      }
+    }
+    .btn {
+      width: 100%;
+    }
   }
 }
 </style>
