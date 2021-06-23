@@ -8,8 +8,9 @@ export default {
   // 실제로 취급해야할 data
   state: () => ({
     movies: [],
-    message: '',
-    loading: false
+    message: 'Search for the movie title!',
+    loading: false,
+    theMovie: {}
   }),
   // computed(계산된 데이터), 계산된 상태를 만들어내는 것
   getters: {},
@@ -30,6 +31,15 @@ export default {
   // 특정 데이터를 직접 수정이 불가, 비동기
   actions: {
     async searchMovies({ state, commit }, payload) {
+      // loading이 ture로 바뀌기 전에 실행
+      if (state.loading) return
+
+      commit('updateState', {
+        // 검색 전 메세지 초기화, 검색 시작
+        message: '',
+        loading: true
+      })
+
       try {
         // Search Movies
         const res = await _fetchMovie({
@@ -71,6 +81,35 @@ export default {
           movies: [],
           message
         })
+      } finally {
+        commit('updateState', {
+          // true로 변경했던 loading을 마지막에 false로 다시 변경
+          loading: false
+        })
+      }
+    },
+    async searchMovieWithId({ state, commit }, payload) {
+      if (state.loading) return
+      
+      commit('updateState', {
+        theMovie: {},
+        loading: true
+      })
+
+      try{
+        const res = await _fetchMovie(payload)
+        console.log(res.data)
+        commit('updateState', {
+          theMovie: res.data
+        })
+      } catch (error) {
+        commit('updateState', {
+          theMovie: {}
+        })
+      } finally {
+        commit('updateState', {
+          loading: false
+        })
       }
     }
   }
@@ -78,9 +117,11 @@ export default {
 
 // 현재 파일 내부에서만 처리된다의 의미의 _
 function _fetchMovie(payload) {
-  const{ title, type, year, page } = payload
+  const{ title, type, year, page, id } = payload
   const OMDB_API_KEY = '7035c60c'
-  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
+  const url = id 
+    ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}`
+    : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
   
   return new Promise((resolve, reject) => {
     axios.get(url)
