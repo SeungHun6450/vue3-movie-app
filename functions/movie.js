@@ -1,11 +1,11 @@
 // package에 존재하여 가져올 수 있음, 서버리스함수는 node.js환경으로 동작
 const axios = require('axios')
+const  { OMDB_API_KEY } = process.env
 
 exports.handler = async function (event) {
   console.log(event)
   const payload = JSON.parse(event.body)
   const { title, type, year, page, id } = payload
-  const OMDB_API_KEY = '7035c60c'
   const url = id 
     ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}`
     : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
