@@ -9,6 +9,9 @@ export default createRouter({
   // Hash
   // https://google.com/#/search
   history: createWebHashHistory(),
+  scrollBehavior() {
+    return { top: 0 }
+  },
   // pages
   // '/' -> https://google.com/ : 메인페이지를 의미
   routes: [

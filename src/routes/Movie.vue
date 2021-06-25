@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Loader from '~/components/Loader'
 
 export default {
@@ -84,12 +85,17 @@ export default {
     }
   },
   computed: {
-    theMovie() {
-      return this.$store.state.movie.theMovie
-    },
-    loading() {
-      return this.$store.state.movie.loading
-    }
+    // mapState 사용
+    ...mapState('movie',[
+      'theMovie',
+      'loading'
+    ])
+    // theMovie() {
+    //   return this.$store.state.movie.theMovie
+    // },
+    // loading() {
+    //   return this.$store.state.movie.loading
+    // }
   },
   created() {
     console.log(this.$route)
