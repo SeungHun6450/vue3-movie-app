@@ -79,7 +79,7 @@ export default {
             })
           }
         }
-      } catch (message) {
+      } catch ( {message} ) {
         commit('updateState', {
           // error 발생 시 초기화를 시켜서 아무것도 나오지 않게 movies를 비워줌
           movies: [],
@@ -120,23 +120,7 @@ export default {
 }
 
 // 현재 파일 내부에서만 처리된다의 의미의 _
-function _fetchMovie(payload) {
-  const{ title, type, year, page, id } = payload
-  const OMDB_API_KEY = '7035c60c'
-  const url = id 
-    ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}`
-    : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
-  
-  return new Promise((resolve, reject) => {
-    axios.get(url)
-      .then(res => {
-        if (res.data.Error) {
-          reject(res.data.Error)
-        }
-        resolve(res)
-      })
-      .catch(err => { // error 발생 시 넘어옴
-        reject(err.message)
-      })
-  })
+async function _fetchMovie(payload) {
+  // netlify/functions/movie로 이관
+  return await axios.post('/.netlify/functions/movie', payload)
 }
